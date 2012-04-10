@@ -1,8 +1,10 @@
 describe("EventDispatcher", function() {
   var callback1, callback2;
 
-  callback1 = jasmine.createSpy();
-  callback2 = jasmine.createSpy();
+  beforeEach(function () {
+    callback1 = jasmine.createSpy();
+    callback2 = jasmine.createSpy();
+  });
 
   describe("when someone wants to listen to an event", function () {
     it("registers an event name and a callback", function () {
@@ -28,35 +30,35 @@ describe("EventDispatcher", function() {
       "Baz" : callback2
     });
 
-    expect(EventDispatcher.getList()["Bar"]).toContain(callback1);
-    expect(EventDispatcher.getList()["Baz"]).toContain(callback2);
-
     EventDispatcher.muteAll();
 
     expect(EventDispatcher.getList()).toEqual({});
   });
 
-  it("returns the list of events", function () {
-    expect(EventDispatcher.getList()).toBeInstanceOf(Object);
-  });
-
   describe("when someone wants to notify an event", function () {
-    it("calls all callbacks related to it", function () {
+    beforeEach(function () {
       EventDispatcher.listen("Foo", callback1);
       EventDispatcher.listen("Foo", callback2);
       EventDispatcher.listen("Bar", callback1);
+    });
 
+    it("doesn't call the non-related callbacks", function () {
       EventDispatcher.notify("Baz");
 
       expect(callback1).not.toHaveBeenCalled();
       expect(callback2).not.toHaveBeenCalled();
+    });
 
+    it("calls all callbacks related to it", function () {
       EventDispatcher.notify("Foo");
 
       expect(callback1).toHaveBeenCalled();
       expect(callback2).toHaveBeenCalled();
+    });
 
+    it("calls the callbacks the right amount of times", function () {
       EventDispatcher.notify("Bar");
+      EventDispatcher.notify("Foo");
 
       expect(callback1.callCount).toEqual(2);
     });
