@@ -8,41 +8,41 @@ This allows the implementation of loosely coupled modules, as each won't have th
 
 You may start listening to events by calling `EventDispatcher.listen`. It accepts two signatures:
 
-  // Passing an event name and a callback function
-  EventDispatcher.listen("button_click", function () {
-    alert("The user clicked on the button.");
-  });
+	// Passing an event name and a callback function
+	EventDispatcher.listen("button_click", function () {
+		alert("The user clicked on the button.");
+	});
 
-  // Passing and object with event name and callback pairs
-  EventDispatcher.listen({
-    "submit_click" : function () {
-      alert("The user clicked on the submit button.");
-    },
-    "delete_click" : function () {
-      alert("The user clicked on the delete button.");
-    }
-  });
+	// Passing and object with event name and callback pairs
+	EventDispatcher.listen({
+		"submit_click" : function () {
+			alert("The user clicked on the submit button.");
+		},
+		"delete_click" : function () {
+			alert("The user clicked on the delete button.");
+		}
+	});
 
 To notify an event, use the `EventDispatcher.notify`:
 
-  // Notifying an event
-  EventDispatcher.notify("request_complete");
+	// Notifying an event
+	EventDispatcher.notify("request_complete");
 
-  // Passing data along the event
-  EventDispatcher.notify("request_complete", {
-    "message" : "Success!"
-  });
+	// Passing data along the event
+	EventDispatcher.notify("request_complete", {
+		"message" : "Success!"
+	});
 
 The data is passed as an argument to the callback function. Here's a complete example:
 
-  var printMessage = function (data) {
-    alert("Message: " + data.message);
-  };
+	var printMessage = function (data) {
+		alert("Message: " + data.message);
+	};
 
-  EventDispatcher.listen("request_complete", printMessage);
-  EventDispatcher.notify("request_complete", {
-    "message" : "Success!"
-  });
+	EventDispatcher.listen("request_complete", printMessage);
+	EventDispatcher.notify("request_complete", {
+		"message" : "Success!"
+	});
 
 ## To-dos
 
