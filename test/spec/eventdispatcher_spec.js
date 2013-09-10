@@ -24,6 +24,30 @@ describe("EventDispatcher", function() {
     });
   });
 
+  describe("when someone wants to mute an event", function () {
+    it("deregisters an event name and a callback", function() {
+      EventDispatcher.listen("Woo", callback1);
+      EventDispatcher.mute("Woo", callback1);
+
+      expect(EventDispatcher.getList()["Woo"]).toEqual({});
+    });
+
+    it("deregisters an object with event names and callbacks", function () {
+      EventDispatcher.listen({
+        "Bar" : callback1,
+        "Baz" : callback2
+      });
+
+      EventDispatcher.mute({
+        "Bar" : callback1,
+        "Baz" : callback2
+      });
+
+      expect(EventDispatcher.getList()["Bar"]).toEqual({});
+      expect(EventDispatcher.getList()["Baz"]).toEqual({});
+    });
+  });
+
   it("clears the list of events", function () {
     EventDispatcher.listen({
       "Bar" : callback1,
