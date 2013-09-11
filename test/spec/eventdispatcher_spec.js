@@ -2,8 +2,8 @@ describe("EventDispatcher", function() {
   var callback1, callback2;
 
   beforeEach(function () {
-    callback1 = jasmine.createSpy();
-    callback2 = jasmine.createSpy();
+    callback1 = jasmine.createSpy('callback1');
+    callback2 = jasmine.createSpy('callback2');
   });
 
   describe("when someone wants to listen to an event", function () {
@@ -24,12 +24,22 @@ describe("EventDispatcher", function() {
     });
   });
 
-  describe("when someone wants to mute an event", function () {
-    it("deregisters an event name and a callback", function() {
+  describe("when someone wants to mute a callback", function () {
+    it("deregisters a callback for event name", function() {
       EventDispatcher.listen("Woo", callback1);
       EventDispatcher.mute("Woo", callback1);
 
-      expect(EventDispatcher.getList()["Woo"]).toEqual({});
+      expect(EventDispatcher.getList()["Woo"]).toEqual(null);
+    });
+
+    it("deregisters a callback for event name, event has more callbacks registered", function() {
+      EventDispatcher.listen("Woo", callback1);
+      EventDispatcher.listen("Woo", callback2);
+
+      EventDispatcher.mute("Woo", callback1);
+
+      expect(EventDispatcher.getList()["Woo"]).toNotContain(callback1);
+      expect(EventDispatcher.getList()["Woo"]).toContain(callback2);
     });
 
     it("deregisters an object with event names and callbacks", function () {
@@ -43,9 +53,23 @@ describe("EventDispatcher", function() {
         "Baz" : callback2
       });
 
-      expect(EventDispatcher.getList()["Bar"]).toEqual({});
-      expect(EventDispatcher.getList()["Baz"]).toEqual({});
+      expect(EventDispatcher.getList()["Bar"]).toEqual(null);
+      expect(EventDispatcher.getList()["Baz"]).toEqual(null);
     });
+
+    it("deregisters an object with event names and callbacks, event has more callbacks registered", function() {
+      EventDispatcher.listen({
+        "Bar" : callback1,
+        "Bar" : callback2
+      });
+
+      EventDispatcher.mute({
+        "Bar" : callback1
+      });
+
+      expect(EventDispatcher.getList()["Bar"]).toNotContain(callback1);
+      expect(EventDispatcher.getList()["Bar"]).toContain(callback2);
+   });
   });
 
   it("clears the list of events", function () {
