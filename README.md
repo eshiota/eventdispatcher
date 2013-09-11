@@ -8,46 +8,63 @@ This allows the implementation of loosely coupled modules, as each won't have th
 
 You may start listening to events by calling `EventDispatcher.listen`. It accepts two signatures:
 
-	// Passing an event name and a callback function
-	EventDispatcher.listen("button_click", function () {
-		alert("The user clicked on the button.");
-	});
+```javascript
+// Passing an event name and a callback function
+EventDispatcher.listen("button_click", function () {
+	alert("The user clicked on the button.");
+});
 
-	// Passing and object with event name and callback pairs
-	EventDispatcher.listen({
-		"submit_click" : function () {
-			alert("The user clicked on the submit button.");
-		},
-		"delete_click" : function () {
-			alert("The user clicked on the delete button.");
-		}
-	});
+// Passing and object with event name and callback pairs
+EventDispatcher.listen({
+	"submit_click" : function () {
+		alert("The user clicked on the submit button.");
+	},
+	"delete_click" : function () {
+		alert("The user clicked on the delete button.");
+	}
+});
+```
 
 To notify an event, use the `EventDispatcher.notify`:
 
-	// Notifying an event
-	EventDispatcher.notify("request_complete");
+```javascript
+// Notifying an event
+EventDispatcher.notify("request_complete");
 
-	// Passing data along the event
-	EventDispatcher.notify("request_complete", {
-		"message" : "Success!"
+// Passing data along the event
+EventDispatcher.notify("request_complete", {
+	"message" : "Success!"
 	});
+```
 
 The data is passed as an argument to the callback function. Here's a complete example:
 
-	var printMessage = function (data) {
-		alert("Message: " + data.message);
-	};
+```javascript
+var printMessage = function (data) {
+	alert("Message: " + data.message);
+};
 
-	EventDispatcher.listen("request_complete", printMessage);
-	EventDispatcher.notify("request_complete", {
-		"message" : "Success!"
-	});
+EventDispatcher.listen("request_complete", printMessage);
+EventDispatcher.notify("request_complete", {
+	"message" : "Success!"
+});
+```
 
-## To-dos
+You may stop listening to an event and unregister a callback by calling `EventDispatcher.mute`:
 
-* Write some examples with more complex cases
-* Implement `EventDispatcher.mute` to unregister a callback from an event
+```javascript
+var myFunction = function () {
+	console.log("foo");
+};
+
+EventDispatcher.listen("request_complete", myFunction);
+
+EventDispatcher.notify("request_compete"); // "foo"
+
+EventDispatcher.mute("request_complete", myFunction);
+
+EventDispatcher.notify("request_compete"); // won't do anything
+```
 
 ## Help me!
 
