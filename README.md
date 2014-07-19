@@ -23,6 +23,14 @@ EventDispatcher.listen({
 		alert("The user clicked on the delete button.");
 	}
 });
+
+// Passing channel you can use the same event name and different callbacks
+EventDispatcher.listen("loading", function () {
+	alert("Loading author information.");
+}, "author");
+EventDispatcher.listen("loading", function () {
+	alert("Loading course information.");
+}, "course");
 ```
 
 To notify an event, use the `EventDispatcher.notify`:
@@ -35,6 +43,14 @@ EventDispatcher.notify("request_complete");
 EventDispatcher.notify("request_complete", {
 	"message" : "Success!"
 	});
+
+// Passing data along the event for a different channel
+EventDispatcher.notify("request_complete", {
+	"message" : "Success!"
+	}, "author");
+EventDispatcher.notify("request_complete", {
+	"message" : "Success!"
+	}, "course");
 ```
 
 The data is passed as an argument to the callback function. Here's a complete example:
@@ -61,7 +77,7 @@ EventDispatcher.listen("request_complete", myFunction);
 
 EventDispatcher.notify("request_compete"); // "foo"
 
-EventDispatcher.mute("request_complete", myFunction);
+EventDispatcher.mute("request_complete", myFunction); // pass the channel if you use one, ex.: EventDispatcher.mute("request_complete", myFunction, "other_channel");
 
 EventDispatcher.notify("request_compete"); // won't do anything
 ```
